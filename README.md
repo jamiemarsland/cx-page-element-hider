@@ -11,4 +11,6 @@ Instructions
 
 Versions
 
+v1.0.1 - Add in hide page title
+
 v1.0  - Initial release
