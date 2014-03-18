@@ -35,6 +35,15 @@ function hide_canvas_footer_css() { ?>
     </style>
 <?php }
 
+// Hide page title using CSS
+function hide_canvas_page_title_css() { ?>
+    <style type="text/css">
+        .page article header {
+            display: none !important;
+        }
+    </style>
+<?php }
+
 // Add the front end action
 function hide_canvas_nav_action() {
     global $post;
@@ -45,14 +54,16 @@ function hide_canvas_nav_action() {
     $hide_woo_nav               = false;
     $hide_woo_header_widgetized = false;
     $hide_woo_breadcrumbs       = false;
+    $hide_woo_page_title        = false;
     $hide_woo_footer_sidebars   = false;
-    $hide_woo_footer           = false;
+    $hide_woo_footer            = false;
 
     if ( isset( $post_meta['_hide_woo_top_navigation'] ) ) { $hide_woo_top_navigation       = $post_meta['_hide_woo_top_navigation'][0]; }
     if ( isset( $post_meta['_hide_woo_logo'] ) ) { $hide_woo_logo                           = $post_meta['_hide_woo_logo'][0]; }
     if ( isset( $post_meta['_hide_woo_header_widgetized'] ) ) { $hide_woo_header_widgetized = $post_meta['_hide_woo_header_widgetized'][0]; }    
     if ( isset( $post_meta['_hide_woo_nav'] ) ) { $hide_woo_nav                             = $post_meta['_hide_woo_nav'][0]; }
     if ( isset( $post_meta['_hide_woo_breadcrumbs'] ) ) { $hide_woo_breadcrumbs             = $post_meta['_hide_woo_breadcrumbs'][0]; }
+    if ( isset( $post_meta['_hide_woo_page_title'] ) ) { $hide_woo_page_title               = $post_meta['_hide_woo_page_title'][0]; }
     if ( isset( $post_meta['_hide_woo_footer_sidebars'] ) ) { $hide_woo_footer_sidebars     = $post_meta['_hide_woo_footer_sidebars'][0]; }
     if ( isset( $post_meta['_hide_woo_footer'] ) ) { $hide_woo_footer                       = $post_meta['_hide_woo_footer'][0]; }
 
@@ -74,6 +85,10 @@ function hide_canvas_nav_action() {
 
     if ( $hide_woo_breadcrumbs == 'true' ) {
         remove_action( 'woo_loop_before', 'woo_breadcrumbs', 10 );
+    }
+
+    if ( $hide_woo_page_title == 'true' ) {
+        add_action( 'woo_head', 'hide_canvas_page_title_css' );
     }
 
     if ( $hide_woo_footer_sidebars == 'true' ) {
@@ -142,6 +157,18 @@ function woo_metaboxes_add($woo_metaboxes) {
             'name'    => '_hide_woo_breadcrumbs',
             'std'     => 'No',
             'label'   => 'Hide breadcrumbs?',
+            'type'    => 'checkbox',
+            'desc'    => '',
+            'options' => array(
+                '0' => 'No',
+                '1' => 'Yes',
+            )
+        );
+
+        $woo_metaboxes[] = array(     
+            'name'    => '_hide_woo_page_title',
+            'std'     => 'No',
+            'label'   => 'Hide page title?',
             'type'    => 'checkbox',
             'desc'    => '',
             'options' => array(
