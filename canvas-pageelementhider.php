@@ -3,7 +3,7 @@
 Plugin Name: Canvas Hide Page Elements
 Plugin URI: http://www.pragmatic-web.co.uk/
 Description: A simple plugin to add a per-page control to Canvas that lets you hide page elements on certain pages
-Version: 1.1
+Version: 1.2
 Author: Pragmatic
 Author Email: d@pragmatic-web.co.uk
 Author URI: http://pragmatic-web.co.uk
@@ -36,9 +36,11 @@ function hide_canvas_footer_css() { ?>
 <?php }
 
 // Hide page title using CSS
-function hide_canvas_page_title_css() { ?>
+function hide_canvas_post_title_css() { ?>
     <style type="text/css">
-        .page article header {
+        article header,
+        .tribe-events-single-event-title,
+        .product_title {
             display: none !important;
         }
     </style>
@@ -54,7 +56,7 @@ function hide_canvas_nav_action() {
     $hide_woo_nav               = false;
     $hide_woo_header_widgetized = false;
     $hide_woo_breadcrumbs       = false;
-    $hide_woo_page_title        = false;
+    $hide_woo_post_title        = false;
     $hide_woo_footer_sidebars   = false;
     $hide_woo_footer            = false;
 
@@ -63,7 +65,7 @@ function hide_canvas_nav_action() {
     if ( isset( $post_meta['_hide_woo_header_widgetized'] ) ) { $hide_woo_header_widgetized = $post_meta['_hide_woo_header_widgetized'][0]; }    
     if ( isset( $post_meta['_hide_woo_nav'] ) ) { $hide_woo_nav                             = $post_meta['_hide_woo_nav'][0]; }
     if ( isset( $post_meta['_hide_woo_breadcrumbs'] ) ) { $hide_woo_breadcrumbs             = $post_meta['_hide_woo_breadcrumbs'][0]; }
-    if ( isset( $post_meta['_hide_woo_page_title'] ) ) { $hide_woo_page_title               = $post_meta['_hide_woo_page_title'][0]; }
+    if ( isset( $post_meta['_hide_woo_post_title'] ) ) { $hide_woo_post_title               = $post_meta['_hide_woo_post_title'][0]; }
     if ( isset( $post_meta['_hide_woo_footer_sidebars'] ) ) { $hide_woo_footer_sidebars     = $post_meta['_hide_woo_footer_sidebars'][0]; }
     if ( isset( $post_meta['_hide_woo_footer'] ) ) { $hide_woo_footer                       = $post_meta['_hide_woo_footer'][0]; }
 
@@ -87,8 +89,8 @@ function hide_canvas_nav_action() {
         remove_action( 'woo_loop_before', 'woo_breadcrumbs', 10 );
     }
 
-    if ( $hide_woo_page_title == 'true' ) {
-        add_action( 'woo_head', 'hide_canvas_page_title_css' );
+    if ( $hide_woo_post_title == 'true' ) {
+        add_action( 'woo_head', 'hide_canvas_post_title_css' );
     }
 
     if ( $hide_woo_footer_sidebars == 'true' ) {
@@ -102,105 +104,103 @@ function hide_canvas_nav_action() {
 }
 add_action( 'template_redirect', 'hide_canvas_nav_action' );
 
-function woo_metaboxes_add($woo_metaboxes) {
-    if ( ( get_post_type() == 'page') || ( ! get_post_type() ) ) {
+function woo_metaboxes_add( $woo_metaboxes ) {
 
-        $woo_metaboxes[] = array(
-            'name'    => '_hide_woo_top_navigation',
-            'std'     => 'No',
-            'label'   => 'Hide top nav?',
-            'type'    => 'checkbox',
-            'desc'    => '',
-            'options' => array(
-                '0' => 'No',
-                '1' => 'Yes',
-            )
-        );
+    $woo_metaboxes[] = array(
+        'name'    => '_hide_woo_top_navigation',
+        'std'     => 'No',
+        'label'   => 'Hide top nav?',
+        'type'    => 'checkbox',
+        'desc'    => '',
+        'options' => array(
+            '0' => 'No',
+            '1' => 'Yes',
+        )
+    );
 
-        $woo_metaboxes[] = array(
-            'name'    => '_hide_woo_logo',
-            'std'     => 'No',
-            'label'   => 'Hide logo and strapline?',
-            'type'    => 'checkbox',
-            'desc'    => '',
-            'options' => array(
-                '0' => 'No',
-                '1' => 'Yes',
-            )
-        );
+    $woo_metaboxes[] = array(
+        'name'    => '_hide_woo_logo',
+        'std'     => 'No',
+        'label'   => 'Hide logo and strapline?',
+        'type'    => 'checkbox',
+        'desc'    => '',
+        'options' => array(
+            '0' => 'No',
+            '1' => 'Yes',
+        )
+    );
 
-        $woo_metaboxes[] = array(     
-            'name'    => '_hide_woo_header_widgetized',
-            'std'     => 'No',
-            'label'   => 'Hide header widget area?',
-            'type'    => 'checkbox',
-            'desc'    => '',
-            'options' => array(
-                '0' => 'No',
-                '1' => 'Yes',
-            )
-        );
+    $woo_metaboxes[] = array(     
+        'name'    => '_hide_woo_header_widgetized',
+        'std'     => 'No',
+        'label'   => 'Hide header widget area?',
+        'type'    => 'checkbox',
+        'desc'    => '',
+        'options' => array(
+            '0' => 'No',
+            '1' => 'Yes',
+        )
+    );
 
-        $woo_metaboxes[] = array(     
-            'name'    => '_hide_woo_nav',
-            'std'     => 'No',
-            'label'   => 'Hide primary nav?',
-            'type'    => 'checkbox',
-            'desc'    => '',
-            'options' => array(
-                '0' => 'No',
-                '1' => 'Yes',
-            )
-        );
+    $woo_metaboxes[] = array(     
+        'name'    => '_hide_woo_nav',
+        'std'     => 'No',
+        'label'   => 'Hide primary nav?',
+        'type'    => 'checkbox',
+        'desc'    => '',
+        'options' => array(
+            '0' => 'No',
+            '1' => 'Yes',
+        )
+    );
 
-        $woo_metaboxes[] = array(     
-            'name'    => '_hide_woo_breadcrumbs',
-            'std'     => 'No',
-            'label'   => 'Hide breadcrumbs?',
-            'type'    => 'checkbox',
-            'desc'    => '',
-            'options' => array(
-                '0' => 'No',
-                '1' => 'Yes',
-            )
-        );
+    $woo_metaboxes[] = array(     
+        'name'    => '_hide_woo_breadcrumbs',
+        'std'     => 'No',
+        'label'   => 'Hide breadcrumbs?',
+        'type'    => 'checkbox',
+        'desc'    => '',
+        'options' => array(
+            '0' => 'No',
+            '1' => 'Yes',
+        )
+    );
 
-        $woo_metaboxes[] = array(     
-            'name'    => '_hide_woo_page_title',
-            'std'     => 'No',
-            'label'   => 'Hide page title?',
-            'type'    => 'checkbox',
-            'desc'    => '',
-            'options' => array(
-                '0' => 'No',
-                '1' => 'Yes',
-            )
-        );
+    $woo_metaboxes[] = array(     
+        'name'    => '_hide_woo_post_title',
+        'std'     => 'No',
+        'label'   => 'Hide page title?',
+        'type'    => 'checkbox',
+        'desc'    => '',
+        'options' => array(
+            '0' => 'No',
+            '1' => 'Yes',
+        )
+    );
 
-        $woo_metaboxes[] = array(     
-            'name'    => '_hide_woo_footer_sidebars',
-            'std'     => 'No',
-            'label'   => 'Hide footer widget areas?',
-            'type'    => 'checkbox',
-            'desc'    => '',
-            'options' => array(
-                '0' => 'No',
-                '1' => 'Yes',
-            )
-        );
+    $woo_metaboxes[] = array(     
+        'name'    => '_hide_woo_footer_sidebars',
+        'std'     => 'No',
+        'label'   => 'Hide footer widget areas?',
+        'type'    => 'checkbox',
+        'desc'    => '',
+        'options' => array(
+            '0' => 'No',
+            '1' => 'Yes',
+        )
+    );
 
-        $woo_metaboxes[] = array(     
-            'name'    => '_hide_woo_footer',
-            'std'     => 'No',
-            'label'   => 'Hide footer?',
-            'type'    => 'checkbox',
-            'desc'    => '',
-            'options' => array(
-                '0' => 'No',
-                '1' => 'Yes',
-            )
-        );
-                                              
-    } // End posts
+    $woo_metaboxes[] = array(     
+        'name'    => '_hide_woo_footer',
+        'std'     => 'No',
+        'label'   => 'Hide footer?',
+        'type'    => 'checkbox',
+        'desc'    => '',
+        'options' => array(
+            '0' => 'No',
+            '1' => 'Yes',
+        )
+    );
+
     return $woo_metaboxes;
 }

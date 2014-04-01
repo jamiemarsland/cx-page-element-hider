@@ -11,6 +11,8 @@ Instructions
 
 Versions
 
+v1.2 - Removed the 'page-only' restriction so in theory should work for any post type. Added less specific CSS to hide post title and added specific The Events Calendar and WooCommerce title-hiding CSS. Other CPTs that use specific templates might need other CSS selectors adding.
+
 v1.1 - Add in hide page title
 
-v1.0  - Initial release
+v1.0 - Initial release
