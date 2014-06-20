@@ -46,6 +46,19 @@ function hide_canvas_post_title_css() { ?>
     </style>
 <?php }
 
+
+function hide_nav_in_logo_inside_nav() {
+    ?>
+<style>
+    #navigation .nav_section.first,
+    #navigation .nav_section.third
+    {
+        display: none;
+    }
+</style>
+<?php
+}
+
 // Add the front end action
 function hide_canvas_nav_action() {
     global $post;
@@ -83,6 +96,7 @@ function hide_canvas_nav_action() {
     
     if ( $hide_woo_nav == 'true' ) {
         remove_action( 'woo_header_after', 'woo_nav', 10 );
+        add_action('woo_head', 'hide_nav_in_logo_inside_nav');
     }
 
     if ( $hide_woo_breadcrumbs == 'true' ) {
