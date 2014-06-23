@@ -3,7 +3,7 @@
 Plugin Name: Canvas Hide Page Elements
 Plugin URI: http://www.pragmatic-web.co.uk/
 Description: A simple plugin to add a per-page control to Canvas that lets you hide page elements on certain pages
-Version: 1.2
+Version: 1.3
 Author: Pragmatic
 Author Email: d@pragmatic-web.co.uk
 Author URI: http://pragmatic-web.co.uk
