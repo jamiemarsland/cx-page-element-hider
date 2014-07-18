@@ -26,6 +26,8 @@ License:
   
 */
 
+require_once( 'class-pootlepress-updater.php');
+
 // Hide footer using CSS
 function hide_canvas_footer_css() { ?>
     <style type="text/css">
@@ -223,3 +225,15 @@ if( !function_exists( 'woo_metaboxes_add' ) ) {
     
 }
 
+add_action('init', 'pp_peh_updater');
+function pp_peh_updater()
+{
+    if (!function_exists('get_plugin_data')) {
+        include(ABSPATH . 'wp-admin/includes/plugin.php');
+    }
+    $data = get_plugin_data(__FILE__);
+    $wptuts_plugin_current_version = $data['Version'];
+    $wptuts_plugin_remote_path = 'http://www.pootlepress.com/?updater=1';
+    $wptuts_plugin_slug = plugin_basename(__FILE__);
+    new Pootlepress_Updater ($wptuts_plugin_current_version, $wptuts_plugin_remote_path, $wptuts_plugin_slug);
+}
